@@ -17,6 +17,7 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer');
 
+//optimize images
 gulp.task('img', async function () {
     return gulp.src('src/images/**/*')
         .pipe(cache(imagemin({
@@ -29,15 +30,18 @@ gulp.task('img', async function () {
         .pipe(browserSync.reload({stream: true}));
 });
 
+//move fonts
 gulp.task('fonts', function () {
     return gulp.src(['src/fonts/**/*'])
         .pipe(gulp.dest('dist/fonts/'));
 });
 
+//clear img task cache
 gulp.task('cache', function () {
     return cache.clearAll();
 });
 
+//process styles
 gulp.task('styles', async function () {
     gulp.src('src/styles/*.sass')
         .pipe(sass().on("error", sass.logError))
@@ -51,6 +55,7 @@ gulp.task('styles', async function () {
         .pipe(browserSync.reload({stream: true}));
 });
 
+//launch server, wait for reload event
 gulp.task('browser-sync', async function () {
     browserSync.init({
         server: {baseDir: 'dist'},
@@ -58,6 +63,7 @@ gulp.task('browser-sync', async function () {
     });
 });
 
+//process vendor styles
 gulp.task('styles-vendor', async function () {
     return gulp.src('src/styles/vendor/**/*')
         .pipe(concat('vendor.min.css'))
@@ -66,6 +72,7 @@ gulp.task('styles-vendor', async function () {
         .pipe(gulp.dest('dist/styles/'))
 });
 
+//process scripts
 gulp.task('scripts', async function () {
     var files = glob.sync('src/scripts/*.js');
     files.map(function (file) {
@@ -80,20 +87,30 @@ gulp.task('scripts', async function () {
     });
 });
 
-
-gulp.task('scripts-vendor', async function () {
+//concat vendor scripts
+gulp.task('concat-vendor-scripts', async function () {
     return gulp.src('src/scripts/vendor/*.js')
         .pipe(concat('libs.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist/scripts'));
 });
 
+//move vendor scripts, that don't need to be concated
+gulp.task('move-plugin-scripts', async function () {
+    return gulp.src('src/scripts/vendor/plugins/*.js').pipe(gulp.dest('dist/scripts/plugins'));
+});
+
+//process vendor scripts
+gulp.task('scripts-vendor', gulp.parallel('concat-vendor-scripts', 'move-plugin-scripts'));
+
+//move html pages to dist
 gulp.task('html', async function () {
     return gulp.src('src/*.html')
         .pipe(gulp.dest('dist'))
         .pipe(browserSync.reload({ stream: true }))
 });
 
+//watch for updates
 gulp.task('watch', async function () {
     gulp.watch('src/**/*.sass', gulp.parallel('styles'));
     gulp.watch('src/*.html', gulp.parallel('html'));
@@ -101,6 +118,8 @@ gulp.task('watch', async function () {
     gulp.watch('src/images/**/*', gulp.parallel('img'));
 });
 
+//build project
 gulp.task('build', gulp.parallel('img', 'fonts', 'styles', 'styles-vendor', 'scripts', 'scripts-vendor', 'html'));
 
+//launch dev environment + watchers
 gulp.task('default', gulp.parallel('img', 'styles', 'scripts', 'browser-sync', 'watch'));
