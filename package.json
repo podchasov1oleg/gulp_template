@@ -1,0 +1,34 @@
+{
+  "name": "eh_admin_markup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Podchasov Oleg",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/preset-env": "^7.13.15",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.14",
+    "browserify": "^17.0.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-cache": "^1.1.3",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.3",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-uglify": "^3.0.2",
+    "imagemin-pngquant": "^9.0.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "path": "^0.12.7",
+    "glob": "^7.1.7",
+    "gulp-sourcemaps": "^3.0.0"
+  }
+}
