@@ -75,7 +75,8 @@ gulp.task('scripts', async function () {
             .pipe(source(path.basename(file, '.js') + '.js'))
             .pipe(buffer())
             .pipe(uglify())
-            .pipe(gulp.dest('dist/scripts'));
+            .pipe(gulp.dest('dist/scripts'))
+            .pipe(browserSync.reload({ stream: true }));
     });
 });
 
