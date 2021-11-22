@@ -116,6 +116,7 @@ gulp.task('watch', async function () {
     gulp.watch('src/*.html', gulp.parallel('html'));
     gulp.watch('src/**/*.js', gulp.parallel('scripts'));
     gulp.watch('src/images/**/*', gulp.parallel('img'));
+    gulp.watch('src/fonts/**/*', gulp.parallel('fonts'));
 });
 
 //build project
