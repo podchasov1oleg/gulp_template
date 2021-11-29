@@ -15,7 +15,9 @@ var gulp = require('gulp'),
     glob = require('glob'),
     path = require('path'),
     source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer');
+    buffer = require('vinyl-buffer'),
+    sourcemaps = require('gulp-sourcemaps'),
+    tsify = require('tsify');
 
 //optimize images
 gulp.task('img', async function () {
@@ -74,16 +76,19 @@ gulp.task('styles-vendor', async function () {
 
 //process scripts
 gulp.task('scripts', async function () {
-    var files = glob.sync('src/scripts/*.js');
+    var files = glob.sync('src/scripts/*.ts');
     files.map(function (file) {
         return browserify(file, {debug: true})
+            .plugin(tsify)
             .transform(babelify.configure({presets: ['@babel/preset-env']}))
             .bundle()
-            .pipe(source(path.basename(file, '.js') + '.js'))
+            .pipe(source(path.basename(file, '.ts') + '.js'))
             .pipe(buffer())
             .pipe(uglify())
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('dist/scripts'))
-            .pipe(browserSync.reload({ stream: true }));
+            .pipe(browserSync.reload({stream: true}));
     });
 });
 
@@ -107,7 +112,7 @@ gulp.task('scripts-vendor', gulp.parallel('concat-vendor-scripts', 'move-plugin-
 gulp.task('html', async function () {
     return gulp.src('src/*.html')
         .pipe(gulp.dest('dist'))
-        .pipe(browserSync.reload({ stream: true }))
+        .pipe(browserSync.reload({stream: true}))
 });
 
 //watch for updates
