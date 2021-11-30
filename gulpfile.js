@@ -17,7 +17,8 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     sourcemaps = require('gulp-sourcemaps'),
-    tsify = require('tsify');
+    tsify = require('tsify'),
+    fileInclude = require('gulp-file-include');
 
 //optimize images
 gulp.task('img', async function () {
@@ -111,6 +112,10 @@ gulp.task('scripts-vendor', gulp.parallel('concat-vendor-scripts', 'move-plugin-
 //move html pages to dist
 gulp.task('html', async function () {
     return gulp.src('src/*.html')
+        .pipe(fileInclude({
+            prefix: '@@',
+            basepath: '@file',
+        }))
         .pipe(gulp.dest('dist'))
         .pipe(browserSync.reload({stream: true}))
 });
